@@ -174,8 +174,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/outputs/
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy_environment
 
   deploy_backend_artifact:
     docker:
@@ -209,9 +208,7 @@ jobs:
             cd ~/project/backend
             ansible-galaxy install weareinteractive.environment
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/playbook.yml
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo_migrations
+      - destroy_environment
 
   package_frontend_artifact:
     docker:
@@ -238,9 +235,7 @@ jobs:
           root: ~/
           paths:
             - project/frontend/dist
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo_migrations
+      - destroy_environment
 
   deploy_frontend_artifact:
     docker:
@@ -259,9 +254,7 @@ jobs:
           command: |
             cd ~/project/frontend
             aws s3 cp dist s3://udapeople-prod-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo_migrations
+      - destroy_environment
 
   smoke_test_frontend:
     docker:
@@ -283,9 +276,7 @@ jobs:
             else
             return 1
             fi
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo_migrations
+      - destroy_environment
 
   smoke_test_backend:
     docker:
@@ -304,9 +295,7 @@ jobs:
             API_URL=`cat .circleci/outputs/backend_url.txt`
             echo $API_URL
             curl -s $API_URL/api/status
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo_migrations
+      - destroy_environment
 
 
   deploy_cloudfront_infrastructure:
@@ -334,8 +323,7 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OLD_WORKFLOW_ID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OLD_WORKFLOW_ID}"
             fi
-      - destroy_environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy_environment
 
 workflows:
   default:
