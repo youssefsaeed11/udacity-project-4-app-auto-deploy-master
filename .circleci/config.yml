@@ -353,20 +353,13 @@ workflows:
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - package_frontend_artifact:
-          requires:
-            - deploy_infrastructure
-            - run_db_migrations_for_backend
+          requires: [deploy_infrastructure, run_db_migrations_for_backend]
       - deploy_frontend_artifact:
-          requires:
-            - package_frontend_artifact
+          requires: [package_frontend_artifact]
       - smoke_test_backend:
-          requires:
-            - deploy_backend_artifact
+          requires: [deploy_backend_artifact]
       - smoke_test_frontend:
-          requires:
-            - deploy_frontend_artifact
+          requires: [deploy_frontend_artifact]
       - deploy_cloudfront_infrastructure:
-          requires:
-            - smoke_test_backend
-            - smoke_test_frontend
+          requires: [smoke_test_backend, smoke_test_frontend]
   
